@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// Prefer environment variable in production; fallback to "/api" so Netlify redirects can proxy.
+const baseURL = import.meta.env.VITE_API_BASE_URL || "/api";
+
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL,
 });
 
 // Add Authorization header automatically

@@ -33,6 +33,6 @@ public class User {
     private String role;
 
     @ManyToOne
-    @JoinColumn(name = "class_id")  // only used if role = STUDENT
+    @JoinColumn(name = "class_id") 
     private SchoolClass schoolClass;
 }

@@ -22,8 +22,7 @@ export default function Login() {
       localStorage.setItem("email", res.data.email || "");
       localStorage.setItem("userId", res.data.userId || "");
       localStorage.setItem("userClassId", res.data.userClassId || "");
-      
-      // Force page reload to update authentication state
+       
       window.location.href = "/";
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Login failed");

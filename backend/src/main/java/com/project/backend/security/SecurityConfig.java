@@ -30,21 +30,25 @@ public class SecurityConfig {
 
    @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable()) // disable CSRF for APIs
+    http.csrf(csrf -> csrf.disable())
         .cors(cors -> cors.configurationSource(request -> {
             var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-            corsConfig.setAllowedOrigins(java.util.List.of(
-                "http://localhost:5173", // React Vite dev server
-                "http://localhost:3000"  // if using CRA or other frontend
+            // Allow local dev and Netlify subdomains. Replace with your exact domain if preferred.
+            corsConfig.setAllowedOriginPatterns(java.util.List.of(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://*.netlify.app"
             ));
             corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             corsConfig.setAllowedHeaders(java.util.List.of("*"));
+            corsConfig.setExposedHeaders(java.util.List.of("Authorization"));
             corsConfig.setAllowCredentials(true);
+            corsConfig.setMaxAge(3600L);
             return corsConfig;
         }))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-            .requestMatchers("/api/classes/**").permitAll() // Allow access to classes for registration
+            .requestMatchers("/api/classes/**").permitAll()
             .requestMatchers("/api/schedules/student/**").hasRole("STUDENT")
             .requestMatchers("/api/schedules/teacher/**").hasRole("TEACHER")
             .requestMatchers("/api/schedules/class/**").hasRole("ADMIN")
