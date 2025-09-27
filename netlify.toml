@@ -3,18 +3,24 @@
   command = "npm run build"
   publish = "frontend/dist"
 
+# Environment variables for build
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirects for API calls to backend
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-BACKEND-URL/api/:splat"
+  to = "https://your-backend-url.herokuapp.com/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api"
-  to = "https://YOUR-BACKEND-URL/api"
+  to = "https://your-backend-url.herokuapp.com/api"
   status = 200
   force = true
 
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"

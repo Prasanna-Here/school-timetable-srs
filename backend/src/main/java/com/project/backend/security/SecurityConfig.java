@@ -33,12 +33,17 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
         .cors(cors -> cors.configurationSource(request -> {
             var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-            // Allow local dev and Netlify subdomains. Replace with your exact domain if preferred.
-            corsConfig.setAllowedOriginPatterns(java.util.List.of(
-                "http://localhost:5173",
-                "http://localhost:3000",
-                "https://*.netlify.app"
-            ));
+            // Allow local dev and Netlify subdomains
+            String allowedOrigins = System.getenv("CORS_ALLOWED_ORIGINS");
+            if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
+                corsConfig.setAllowedOriginPatterns(java.util.Arrays.asList(allowedOrigins.split(",")));
+            } else {
+                corsConfig.setAllowedOriginPatterns(java.util.List.of(
+                    "http://localhost:5173",
+                    "http://localhost:3000",
+                    "https://*.netlify.app"
+                ));
+            }
             corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             corsConfig.setAllowedHeaders(java.util.List.of("*"));
             corsConfig.setExposedHeaders(java.util.List.of("Authorization"));
